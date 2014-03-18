@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <flow name="muleessentials2Flow1" doc:name="muleessentials2Flow1">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" doc:name="HTTP Hello World"/>
+        <all doc:name="All">
+            <flow-ref name="GetPricingUnited" doc:name="Flow Reference - united"/>
+            <flow-ref name="GetPricingDelta" doc:name="Flow Reference - delta"/>
+            <flow-ref name="GetPricingSouthwest" doc:name="Flow Reference - southwest"/>
+        </all>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <http:response-builder contentType="text/plain" doc:name="HTTP Response Builder"/>
+    </flow>
+    <flow name="getIndexHtml" doc:name="getIndexHtml">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8088" path="tickets" doc:name="HTTP"/>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <logger message="INBOUND PAYLOAD: #[message.inboundProperties['http.method']] : #[message.payload.toString()]" level="INFO" doc:name="Log Payload"/>
+        <choice doc:name="Choice">
+            <when expression="#[message.inboundProperties['http.method'] == 'GET']">
+                <parse-template location="src\main\resources\index.html" doc:name="Parse Template"/>
+                <http:response-builder contentType="text/html" doc:name="HTTP Response Builder">
+                    <http:cache-control noCache="true"/>
+                </http:response-builder>
+            </when>
+            <otherwise>
+                <set-payload value="Payload was: #[message.payload]" doc:name="Set Payload"/>
+            </otherwise>
+        </choice>
+    </flow>
+    <sub-flow name="GetPricingUnited" doc:name="GetPricingUnited">
+        <component class="com.mulesoft.training.pricing.PriceComponent" doc:name="Java"/>
+        <append-string-transformer message=" United" doc:name="Append String - United"/>
+    </sub-flow>
+    <sub-flow name="GetPricingSouthwest" doc:name="GetPricingSouthwest">
+        <component class="com.mulesoft.training.pricing.PriceComponent" doc:name="Get Southwest Price"/>
+        <append-string-transformer message=" Southwest" doc:name="Append String - Southwest"/>
+    </sub-flow>
+    <sub-flow name="GetPricingDelta" doc:name="GetPricingDelta">
+        <component class="com.mulesoft.training.pricing.PriceComponent" doc:name="Get Delta Price"/>
+        <append-string-transformer message=" Delta" doc:name="Append String - Delta"/>
+    </sub-flow>
+</mule>
