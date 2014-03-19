@@ -14,7 +14,13 @@ public class PriceOfferingUnited extends PriceOffering {
 	}
 
 	protected int getPrice(String destination, String origin) throws AirportNotFoundException {
-
+		System.out.println("IN PriceOfferingUnited:  "+destination+" "+origin);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		int price;
 		// Set United prices based on destination
 		if (destination.equalsIgnoreCase("SFO")) {
@@ -26,6 +32,7 @@ public class PriceOfferingUnited extends PriceOffering {
 		} else {
 			throw new AirportNotFoundException(destination + " Destination not found");
 		}
+		
 
 		// Increment United prices based on origin
 		if (price > 0) {
@@ -40,6 +47,7 @@ public class PriceOfferingUnited extends PriceOffering {
 			}
 		}
 
+		System.out.println("EXITING PriceOfferingUnited: "+destination+" "+origin+" "+price);
 		return price;
 	}
 }

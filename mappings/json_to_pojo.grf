@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="McAlineys" created="Tue Mar 18 15:44:50 CDT 2014" description="JSON To Pojo" guiVersion="3.4.3.P" id="1395176100113" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue Mar 18 15:44:50 CDT 2014" modifiedBy="McAlineys" name="JSON_To_Pojo" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Input" id="4e156de8-1049-439d-8bf8-c4a6fa4c4d0a">
+<Record fieldDelimiter="," name="object" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/object/destination" containerType="SINGLE" label="destination" name="destination" type="string"/>
+<Field __index="1" __sourcePath="{}/object/origination" containerType="SINGLE" label="origination" name="origin" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Output" id="1efb0431-4ff2-4938-aaf3-0e1fa2edead7">
+<Record fieldDelimiter="," name="PriceRequest" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/object/destination" containerType="SINGLE" label="destination" name="destination" type="string"/>
+<Field __index="1" __sourcePath="{}/object/origin" containerType="SINGLE" label="origin" name="origin" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Pojo WRITER" guiX="900" guiY="20" id="BEAN_WRITER0" type="BEAN_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<object xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <destination>$0.destination</destination>
+  <origin>$0.origin</origin>
+</object>]]></attr>
+<attr name="_data_format"><![CDATA[JAVA]]></attr>
+<attr name="schema"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><schema-object>
+  <typed-object-ref type-ref="com.mulesoft.training.pricing.PriceRequest"/>
+  <typed-object type="com.mulesoft.training.pricing.PriceRequest">
+    <typed-object-ref name="destination" type-ref="java.lang.String"/>
+    <typed-object-ref name="origin" type-ref="java.lang.String"/>
+  </typed-object>
+  <typed-object type="java.lang.String"/>
+</schema-object>
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'object' -&gt; 'object'" guiX="460" guiY="20" id="FOREACH_OBJECT_OBJECT" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.destination = input.destination;
+output.origin = input.origin;
+]]></attr>
+</Node>
+<Node charset="UTF-8" enabled="enabled" fileURL="dict:inputPayload" guiName="JSON READER" guiX="20" guiY="20" id="JSON_READER0" type="JSON_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context xpath="/root">
+  <Context outPort="0" sequenceField="__id" xpath="object">
+    <Mapping cloverField="destination" trim="true" xpath="destination"/>
+    <Mapping cloverField="origin" trim="true" xpath="origination"/>
+  </Context>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[JSON]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="FOREACH_OBJECT_OBJECT:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="1efb0431-4ff2-4938-aaf3-0e1fa2edead7" outPort="Port 0 (out)" toNode="BEAN_WRITER0:0"/>
+<Edge debugMode="true" fromNode="JSON_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="4e156de8-1049-439d-8bf8-c4a6fa4c4d0a" outPort="Port 0 (out)" toNode="FOREACH_OBJECT_OBJECT:0"/>
+</Phase>
+</Graph>

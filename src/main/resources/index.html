@@ -10,6 +10,9 @@
 	function ajaxFunction() {
 		var destinationMenu = document.getElementById("destination");
 		var originationMenu = document.getElementById("origination");
+		var start = new Date();
+		
+		document.getElementById("formResponse").innerHTML = "waiting ...";
 
 		var jsonObject = {
 			"destination" : destinationMenu.options[destinationMenu.selectedIndex].value,
@@ -40,15 +43,23 @@
 
 		// Create a function that will receive data sent from the server
 		ajaxRequest.onreadystatechange = function() {
+			var processingTime=new Date() - start;
+			
 			if (ajaxRequest.readyState == 4) {
 
 				if (ajaxRequest.status == 200) {
 					var response = ajaxRequest.responseText;
 
-					document.getElementById("formResponse").innerHTML = response;
+					document.getElementById("formResponse").innerHTML = "Time:"+processingtime+"<br>"+response;
+
+				}
+				else {
+					var response = ajaxRequest.responseText;
+					document.getElementById("formResponse").innerHTML = "Time:"+processingtime+"<br>"+ "ERROR" + ajaxRequest.status + "<br>" + response;
 
 				}
 			}
+
 		}
 
 		ajaxRequest.open("POST", "/tickets", true);
