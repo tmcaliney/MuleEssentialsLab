@@ -50,12 +50,12 @@
 				if (ajaxRequest.status == 200) {
 					var response = ajaxRequest.responseText;
 
-					document.getElementById("formResponse").innerHTML = "Time:"+processingtime+"<br>"+response;
+					document.getElementById("formResponse").innerHTML = "Time:"+processingTime+"<br>"+response;
 
 				}
 				else {
 					var response = ajaxRequest.responseText;
-					document.getElementById("formResponse").innerHTML = "Time:"+processingtime+"<br>"+ "ERROR" + ajaxRequest.status + "<br>" + response;
+					document.getElementById("formResponse").innerHTML = "Time:"+processingTime+"<br>"+ "ERROR" + ajaxRequest.status + "<br>" + response;
 
 				}
 			}

@@ -15,11 +15,11 @@ public class PriceOfferingUnited extends PriceOffering {
 
 	protected int getPrice(String destination, String origin) throws AirportNotFoundException {
 		System.out.println("IN PriceOfferingUnited:  "+destination+" "+origin);
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(2000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		
 		int price;
 		// Set United prices based on destination

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="McAlineys" created="Tue Mar 18 15:44:50 CDT 2014" description="Map To Pojo" guiVersion="3.4.3.P" id="1395252803301" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue Mar 18 15:44:50 CDT 2014" modifiedBy="McAlineys" name="Map_To_Pojo" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/payload" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _type="Input" id="f2f2ee0f-0f91-4968-8113-5be0592d3781">
+<Record fieldDelimiter="," name="payload" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/payload/PRICE" containerType="SINGLE" label="PRICE" name="PRICE" type="integer"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/object" _dataStructure="OBJECT" _id="__id" _type="Output" id="2e743c4d-3403-4167-a05c-4e17465622ab">
+<Record fieldDelimiter="," name="PriceOffer" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/object/airline" containerType="SINGLE" label="airline" name="airline" type="string"/>
+<Field __index="1" __sourcePath="{}/object/price" containerType="SINGLE" label="price" name="price" type="integer"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+<Entry dictval.__javaType="java.lang.String" id="DictionaryEntry2" input="true" name="airline" output="true" type="string"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" fileURL="dict:inputPayload" guiName="Map&lt;k,v&gt; READER" guiX="20" guiY="20" id="BEAN_READER0" type="BEAN_READER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath=".">
+  <Mapping cloverField="PRICE" trim="true" xpath="PRICE"/>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Pojo WRITER" guiX="900" guiY="20" id="BEAN_WRITER0" type="BEAN_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<object xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <airline>$0.airline</airline>
+  <price>$0.price</price>
+</object>]]></attr>
+<attr name="_data_format"><![CDATA[JAVA]]></attr>
+<attr name="schema"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><schema-object>
+  <typed-object-ref type-ref="com.mulesoft.training.pricing.PriceOffer"/>
+  <typed-object type="int"/>
+  <typed-object type="java.lang.String"/>
+  <typed-object type="com.mulesoft.training.pricing.PriceOffer">
+    <typed-object-ref name="airline" type-ref="java.lang.String"/>
+    <typed-object-ref name="price" type-ref="int"/>
+  </typed-object>
+</schema-object>
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'payload' -&gt; 'object'" guiX="460" guiY="20" id="FOREACH_PAYLOAD_OBJECT" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.price = input.PRICE;
+output.airline = inputArguments.airline;]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="BEAN_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="f2f2ee0f-0f91-4968-8113-5be0592d3781" outPort="Port 0 (out)" toNode="FOREACH_PAYLOAD_OBJECT:0"/>
+<Edge debugMode="true" fromNode="FOREACH_PAYLOAD_OBJECT:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="2e743c4d-3403-4167-a05c-4e17465622ab" outPort="Port 0 (out)" toNode="BEAN_WRITER0:0"/>
+</Phase>
+</Graph>

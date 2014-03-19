@@ -39,6 +39,7 @@ public class DBInitialization implements InitializingBean {
 			stmt.executeUpdate("INSERT INTO Ticket_Price(PRICE, DESTINATION, ORIGIN) VALUES (450, 'LAX','YYZ')");
 			stmt.executeUpdate("INSERT INTO Ticket_Price(PRICE, DESTINATION, ORIGIN) VALUES (777, 'SEA','SQL')");
 			stmt.executeUpdate("INSERT INTO Ticket_Price(PRICE, DESTINATION, ORIGIN) VALUES (999, 'SFO','SQL')");
+			stmt.executeUpdate("INSERT INTO Ticket_Price(PRICE, DESTINATION, ORIGIN) VALUES (1, 'FOO','BAR')");
 			}
 			
 		} 
