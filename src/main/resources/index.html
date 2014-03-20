@@ -5,6 +5,9 @@
 <head>
 <title>MuleSoft Training Airline Reservation System</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+
 <script type="text/javascript" src="http://www.json.org/json2.js"></script>
 <script type="text/javascript">
 	function ajaxFunction() {
@@ -51,6 +54,12 @@
 					var response = ajaxRequest.responseText;
 
 					document.getElementById("formResponse").innerHTML = "Time:"+processingTime+"<br>"+response;
+					
+//					$.each(response, function(index, element) {
+//			            $('body').append($('<div>', {
+//			                text: element.request.destination;
+//			            })) 
+//			        });
 
 				}
 				else {

@@ -22,6 +22,7 @@ http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/
     <jdbc-ee:derby-data-source name="Derby_Data_Source" password="" url="jdbc:derby:memory:muleEmbeddedDB;create=true" transactionIsolation="UNSPECIFIED" doc:name="Derby Data Source"/>
     <jdbc-ee:connector name="SouthwestPriceDB" dataSource-ref="Derby_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
         <jdbc-ee:query key="GET_PRICE_FOR_DEST_ORIGIN" value="SELECT PRICE FROM Ticket_Price WHERE DESTINATION=#[message.payload.destination] AND ORIGIN = #[message.payload.origin]"/>
+        <jdbc-ee:query key="UPDATE_PRICE" value="UPDATE Ticket_Price SET PRICE = #[message.payload['Tax']] WHERE DESTINATION=#[message.payload['AirportDestinationCode']]"/>
     </jdbc-ee:connector>
     <data-mapper:config name="map_to_pojo" transformationGraphPath="map_to_pojo.grf" doc:name="map_to_pojo"/>
     <flow name="PriceQuoteFlow" doc:name="PriceQuoteFlow">
@@ -31,11 +32,13 @@ http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/
                 <when expression="#[message.inboundProperties['http.method'] == 'POST']">
                     <logger message="AFTER JSON-TO-POJO: #[message.payload]" level="INFO" doc:name="Logger"/>
                     <data-mapper:transform config-ref="json_to_pojo" doc:name="JSON To Pojo"/>
+                <set-variable variableName="PriceRequest" value="#[message.payload]" doc:name="Save PriceRequest"/>
                     <all doc:name="All">
                         <flow-ref name="GetPriceOfferingUnited" doc:name="CallGetPriceOfferingUnited"/>
                         <flow-ref name="GetPriceOfferingDelta" doc:name="CallGetPriceOfferingDelta"/>
                         <flow-ref name="GetPriceOfferingSouthwest" doc:name="CallGetPriceOfferingSouthwest"/>
                     </all>
+                <component class="PriceQuoteToPriceResponseTransformer" doc:name="Java"/>
                     <json:object-to-json-transformer ignoreBadInput="true" doc:name="Object to JSON"/>
                 </when>
                 <otherwise>
