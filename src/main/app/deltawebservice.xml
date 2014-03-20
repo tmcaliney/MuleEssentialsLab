@@ -5,7 +5,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd">
     <flow name="DeltaWebserviceFlow1" doc:name="DeltaWebserviceFlow1">
-        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8088" path="delta_price_service" doc:name="HTTP"/>
+        <http:inbound-endpoint exchange-pattern="request-response" host="${soap.client.host}" port="${soap.client.port}" path="delta_price_service" doc:name="HTTP"/>
         <logger level="INFO" doc:name="Logger"/>
         <cxf:jaxws-service serviceClass="com.mulesoft.training.pricing.PricingOfferService" doc:name="SOAP"/>
         <component class="com.mulesoft.training.pricing.PriceOfferingDelta" doc:name="GetPrice"/>

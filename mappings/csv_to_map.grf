@@ -20,6 +20,7 @@
 <Dictionary>
 <Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
 <Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+<Entry dictval.__javaType="java.lang.Integer" id="DictionaryEntry2" input="false" name="test" output="true" type="integer"/>
 </Dictionary>
 </Global>
 <Phase number="0">
@@ -35,7 +36,8 @@ output.__id = (isnull(input.__id) ? null : num2str(input.__id));
 output.AirportDestinationCode = input.AirportDestinationCode;
 output.FlightCost = input.FlightCost;
 output.Tax = input.Tax;
-output.TotalCost = input.FlightCost + input.Tax ;]]></attr>
+output.TotalCost = input.FlightCost + input.Tax; 
+outputArguments.test = input.Tax;]]></attr>
 </Node>
 <Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
 <attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -44,6 +46,7 @@ output.TotalCost = input.FlightCost + input.Tax ;]]></attr>
     <AirportDestinationCode>$0.AirportDestinationCode</AirportDestinationCode>
     <FlightCost>$0.FlightCost</FlightCost>
     <Tax>$0.Tax</Tax>
+    <TotalCost>$0.TotalCost</TotalCost>
   </item>
 </clover:collection>]]></attr>
 <attr name="_data_format"><![CDATA[MAP]]></attr>

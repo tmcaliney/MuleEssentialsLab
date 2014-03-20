@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2014-03-20 21:12:24.013 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.6.1.0 - (938214): instance a816c00e-0144-e156-76be-0000007d8e40 
-on database directory memory:C:\software\mule\MuleEssentialsLabs\muleessentials2\muleEmbeddedDB   with class loader sun.misc.Launcher$AppClassLoader@19c873d
+2014-03-20 22:08:52.461 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.6.1.0 - (938214): instance a816c00e-0144-e18a-2a7a-000000a693a0 
+on database directory memory:C:\software\mule\MuleEssentialsLabs\muleessentials2\muleEmbeddedDB   with class loader sun.misc.Launcher$AppClassLoader@11bf785
 
 Database Class Loader started - derby.database.classpath=''

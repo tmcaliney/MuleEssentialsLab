@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+<mule xmlns:context="http://www.springframework.org/schema/context" xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
 	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
@@ -22,9 +22,10 @@ http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/
     <jdbc-ee:derby-data-source name="Derby_Data_Source" password="" url="jdbc:derby:memory:muleEmbeddedDB;create=true" transactionIsolation="UNSPECIFIED" doc:name="Derby Data Source"/>
     <jdbc-ee:connector name="SouthwestPriceDB" dataSource-ref="Derby_Data_Source" validateConnections="true" queryTimeout="-1" pollingFrequency="0" doc:name="Database">
         <jdbc-ee:query key="GET_PRICE_FOR_DEST_ORIGIN" value="SELECT PRICE FROM Ticket_Price WHERE DESTINATION=#[message.payload.destination] AND ORIGIN = #[message.payload.origin]"/>
-        <jdbc-ee:query key="UPDATE_PRICE" value="UPDATE Ticket_Price SET PRICE = #[message.payload['Tax']] WHERE DESTINATION=#[message.payload['AirportDestinationCode']]"/>
+        <jdbc-ee:query key="UPDATE_PRICE" value="UPDATE Ticket_Price SET PRICE = #[message.payload['TotalCost']] WHERE DESTINATION=#[message.payload['AirportDestinationCode']]"/>
     </jdbc-ee:connector>
     <data-mapper:config name="map_to_pojo" transformationGraphPath="map_to_pojo.grf" doc:name="map_to_pojo"/>
+    <context:property-placeholder location="mule.dev.properties"/>
     <flow name="PriceQuoteFlow" doc:name="PriceQuoteFlow">
         <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8088" path="tickets" doc:name="HTTP"/>
         <logger message="INBOUND PAYLOAD: #[message.inboundProperties['http.method']] : #[message.payload.toString()]" level="INFO" doc:name="Log Payload"/>
@@ -42,7 +43,7 @@ http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/
                     <json:object-to-json-transformer ignoreBadInput="true" doc:name="Object to JSON"/>
                 </when>
                 <otherwise>
-                    <parse-template location="src\main\resources\index.html" doc:name="Return page"/>
+                    <parse-template location="index.html" doc:name="Return page"/>
                     <http:response-builder contentType="text/html" doc:name="HTTP Response Builder">
                         <http:cache-control noCache="true"/>
                     </http:response-builder>
@@ -87,7 +88,7 @@ http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/
     <flow name="GetPriceOfferingDelta" doc:name="GetPriceOfferingDelta">
         <logger level="INFO" doc:name="Logger"/>
         <cxf:jaxws-client serviceClass="com.mulesoft.training.pricing.PricingOfferService" doc:name="SOAP" operation="getOffer"/>
-        <http:outbound-endpoint exchange-pattern="request-response" host="localhost" port="8088" path="delta_price_service" method="POST" doc:name="HTTP"/>
+        <http:outbound-endpoint exchange-pattern="request-response" host="${soap.client.host}" port="${soap.client.port}" path="delta_price_service" method="POST" doc:name="HTTP"/>
         <logger level="INFO" doc:name="Logger"/>
         <catch-exception-strategy doc:name="Catch Exception Strategy">
             <set-payload value="#[new com.mulesoft.training.pricing.PriceOffer('Delta', 0)] " doc:name="Set Payload"/>
